@@ -17,7 +17,6 @@ export const env = {
   port: Number(process.env.PORT ?? 4000),
   corsOrigin: process.env.CORS_ORIGIN ?? "http://localhost:5173",
 
-  // In test env we fall back to safe defaults so the suite never needs a real .env file.
   mongodbUri: isTest
     ? (process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017/lld-practice-test")
     : required("MONGODB_URI"),

@@ -1,0 +1,21 @@
+{
+  "name": "lld-practice-platform",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A practice platform for Low-Level Design: choose a problem, design a solution, submit, and get deterministic + AI feedback.",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "seed": "npm run seed --workspace=server",
+    "test:server": "npm run test --workspace=server",
+    "test:client": "npm run test --workspace=client",
+    "test": "npm run test:server && npm run test:client"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

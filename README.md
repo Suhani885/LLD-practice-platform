@@ -3,8 +3,6 @@
 A small practice experience for Low-Level Design: pick a problem (Parking Lot, Elevator, Vending Machine, ...),
 design a solution, submit it, and get explainable feedback that combines deterministic checks with LLM reasoning.
 
-> Status: under active development. Full setup instructions, the research note, and the design note will land here
-> as the project is built out (see the repo history for progress).
 
 ## Stack
 

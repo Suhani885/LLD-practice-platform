@@ -1,6 +1,6 @@
 import type { Schema } from "mongoose";
 
-export function applyIdTransform(schema: Schema<any>): void {
+export function applyIdTransform(schema: Schema<any>, refRenames: Record<string, string> = {}): void {
   schema.set("toJSON", {
     virtuals: true,
     versionKey: false,
@@ -8,6 +8,12 @@ export function applyIdTransform(schema: Schema<any>): void {
       if (ret._id) {
         ret.id = String(ret._id);
         delete ret._id;
+      }
+      for (const [from, to] of Object.entries(refRenames)) {
+        if (ret[from] !== undefined) {
+          ret[to] = String(ret[from]);
+          if (to !== from) delete ret[from];
+        }
       }
       return ret;
     },

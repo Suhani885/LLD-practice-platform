@@ -29,6 +29,6 @@ const attemptSchema = new Schema<AttemptDocument>(
 
 attemptSchema.index({ user: 1, problem: 1, status: 1 });
 
-applyIdTransform(attemptSchema);
+applyIdTransform(attemptSchema, { problem: "problemId", user: "userId" });
 
 export const Attempt = model<AttemptDocument>("Attempt", attemptSchema);

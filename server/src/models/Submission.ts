@@ -36,6 +36,6 @@ const submissionSchema = new Schema<SubmissionDocument>(
 
 submissionSchema.index({ user: 1, createdAt: -1 });
 
-applyIdTransform(submissionSchema);
+applyIdTransform(submissionSchema, { attempt: "attemptId", problem: "problemId", user: "userId" });
 
 export const Submission = model<SubmissionDocument>("Submission", submissionSchema);

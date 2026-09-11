@@ -95,8 +95,6 @@ export interface LLMFeedback {
 }
 
 export interface EvaluationResult {
-  id: ID;
-  submissionId: ID;
   deterministic: DeterministicReport;
   llm: LLMFeedback | null;
   overallScore: number;

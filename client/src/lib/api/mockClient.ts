@@ -299,8 +299,6 @@ export class MockApiClient implements ApiClient {
         const overallScore = Math.round(deterministic.score * 0.5 + llm.score * 0.5);
 
         const evaluation: EvaluationResult = {
-          id: newId("eval"),
-          submissionId,
           deterministic,
           llm,
           overallScore,

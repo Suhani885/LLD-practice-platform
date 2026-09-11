@@ -151,3 +151,20 @@
     @apply font-sans;
     }
 }
+
+@layer utilities {
+  .bg-mesh {
+    background-image:
+      radial-gradient(at 15% 0%, color-mix(in oklch, var(--primary) 16%, transparent) 0px, transparent 55%),
+      radial-gradient(at 85% 10%, color-mix(in oklch, var(--info) 14%, transparent) 0px, transparent 55%),
+      radial-gradient(at 100% 100%, color-mix(in oklch, var(--success) 10%, transparent) 0px, transparent 60%);
+  }
+
+  .card-hover {
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -12px color-mix(in oklch, var(--foreground) 18%, transparent);
+  }
+}

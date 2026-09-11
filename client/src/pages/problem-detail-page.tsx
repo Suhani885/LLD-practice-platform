@@ -1,13 +1,14 @@
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { DifficultyBadge } from "@/components/difficulty-badge";
-import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api, type Problem } from "@/lib/api";
+import { getDifficultyAccent, getProblemIcon } from "@/lib/problem-visuals";
+import { cn } from "@/lib/utils";
 
 export function ProblemDetailPage() {
   const { problemSlug = "" } = useParams();
@@ -51,29 +52,36 @@ export function ProblemDetailPage() {
     );
   }
 
+  const Icon = getProblemIcon(problem.slug);
+  const accent = getDifficultyAccent(problem.difficulty);
+
   return (
     <>
       <Link to="/problems" className="mb-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> Back to problems
       </Link>
 
-      <PageHeader
-        title={problem.title}
-        actions={
-          <Button onClick={handleStart} disabled={isStarting}>
-            {isStarting && <Loader2 className="size-4 animate-spin" />}
-            Start attempt
-          </Button>
-        }
-      />
-
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <DifficultyBadge difficulty={problem.difficulty} />
-        {problem.tags.map((tag) => (
-          <Badge key={tag} variant="secondary">
-            {tag}
-          </Badge>
-        ))}
+      <div className="bg-mesh mb-6 flex flex-col gap-5 rounded-2xl border px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="flex items-start gap-4">
+          <div className={cn("flex size-12 shrink-0 items-center justify-center rounded-xl", accent.bg)}>
+            <Icon className={cn("size-6", accent.fg)} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">{problem.title}</h1>
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <DifficultyBadge difficulty={problem.difficulty} />
+              {problem.tags.map((tag) => (
+                <Badge key={tag} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+        <Button onClick={handleStart} disabled={isStarting} size="lg" className="shrink-0">
+          {isStarting ? <Loader2 className="size-4 animate-spin" /> : <ArrowRight className="size-4" />}
+          Start attempt
+        </Button>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

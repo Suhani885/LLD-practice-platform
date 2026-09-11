@@ -96,8 +96,15 @@ Open http://localhost:5173, register an account, and start practicing.
 ## Testing
 
 ```bash
-npm run test:server
-npm run test:client
+npm run test:server   # Jest + Supertest: 34 tests (domain unit tests + full API integration tests)
+npm run test:client   # Vitest + Testing Library: 15 tests
 ```
+
+Server tests run against an in-memory MongoDB (`mongodb-memory-server`) — never your real Atlas cluster — and
+force `GROQ_API_KEY` to empty before any module loads, so they always exercise the deterministic mock feedback
+provider: fast, free, and reproducible, with no risk of quietly burning real API quota during CI. Coverage
+includes the evaluation pipeline's failure-degradation path (LLM call throws → result still completes using the
+deterministic score alone) and authorization edge cases (one user cannot read or act on another user's
+attempts/submissions).
 
 

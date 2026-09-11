@@ -39,7 +39,7 @@ export function LoginPage() {
       <form onSubmit={handleSubmit}>
         <CardHeader>
           <CardTitle className="text-xl">Log in</CardTitle>
-          <CardDescription>This is a demo account — any email/password works.</CardDescription>
+          <CardDescription>Welcome back — pick up where you left off.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">

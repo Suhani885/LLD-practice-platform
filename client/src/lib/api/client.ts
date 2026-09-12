@@ -23,12 +23,12 @@ export interface ApiClient {
   listProblems(): Promise<Problem[]>;
   getProblem(problemIdOrSlug: string): Promise<Problem | null>;
 
-  startAttempt(problemId: string): Promise<Attempt>;
+  startAttempt(problemId: string, fromSubmissionId?: string): Promise<Attempt>;
   getAttempt(attemptId: string): Promise<Attempt | null>;
   saveAttemptDraft(attemptId: string, patch: AttemptDraftPatch): Promise<Attempt>;
 
   submitAttempt(attemptId: string): Promise<Submission>;
   getSubmission(submissionId: string): Promise<Submission | null>;
 
-  listSubmissions(): Promise<Submission[]>;
+  listSubmissions(problemId?: string): Promise<Submission[]>;
 }

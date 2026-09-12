@@ -1,11 +1,14 @@
 # LLD Practice Platform
 
-A small practice experience for Low-Level Design: pick a problem (Parking Lot, Elevator, Vending Machine),
-design a solution (classes, interfaces, relationships, and a written rationale), submit it, and get explainable
-feedback that combines deterministic structural checks with LLM reasoning. Past attempts are kept so practice
-compounds instead of being one-off.
+A small practice experience for Low-Level Design: pick a problem (Parking Lot, Elevator System, Vending Machine,
+Library Management, Movie Ticket Booking, or Expense Splitter), design a solution (classes, interfaces,
+relationships, and a written rationale), submit it, and get explainable feedback that combines deterministic
+structural checks with LLM reasoning. Past attempts are kept and compared — pick up a previous design where you
+left it off, or see how much your score improved on a retry — so practice compounds instead of being one-off.
 
 **Practice loop:** Choose problem → Design → Submit → Get feedback → Review → Try again
+
+**Docs:** [Research note](RESEARCH.md) · [Design note](DESIGN.md) · [AI usage](AI_USAGE.md)
 
 ## Stack
 
@@ -32,6 +35,9 @@ compounds instead of being one-off.
     submission it belongs to.
   - `jobs/EvaluationQueue.ts` — the in-process async runner that drives a submission through the pipeline.
   - `services/`, `controllers/`, `routes/` — thin layers wiring HTTP to the domain/data layer.
+- **Review and iterate:** a problem's detail page offers "Continue from last attempt" (pre-fills a new attempt
+  from a previous submission) once you've attempted it before, and the feedback page shows your score delta
+  against your previous best — see `DESIGN.md`'s "Review and iterate" section for the full rationale.
 
 ## Project structure
 
@@ -80,7 +86,7 @@ works out of the box for local dev — you only need a `client/.env` if you're p
 npm run seed
 ```
 
-Upserts the 3 practice problems (safe to re-run).
+Upserts the 6 practice problems (safe to re-run).
 
 ### 4. Run it
 
@@ -96,8 +102,8 @@ Open http://localhost:5173, register an account, and start practicing.
 ## Testing
 
 ```bash
-npm run test:server   # Jest + Supertest: 34 tests (domain unit tests + full API integration tests)
-npm run test:client   # Vitest + Testing Library: 15 tests
+npm run test:server   # Jest + Supertest: 38 tests (domain unit tests + full API integration tests)
+npm run test:client   # Vitest + Testing Library: 17 tests
 ```
 
 Server tests run against an in-memory MongoDB (`mongodb-memory-server`) — never your real Atlas cluster — and
@@ -106,5 +112,3 @@ provider: fast, free, and reproducible, with no risk of quietly burning real API
 includes the evaluation pipeline's failure-degradation path (LLM call throws → result still completes using the
 deterministic score alone) and authorization edge cases (one user cannot read or act on another user's
 attempts/submissions).
-
-

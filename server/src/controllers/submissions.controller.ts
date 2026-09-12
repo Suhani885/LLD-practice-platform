@@ -18,6 +18,7 @@ export const getSubmission = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const listSubmissions = asyncHandler(async (req: Request, res: Response) => {
-  const submissions = await submissionService.listForUser(req.userId!);
+  const problemId = typeof req.query.problemId === "string" ? req.query.problemId : undefined;
+  const submissions = await submissionService.listForUser(req.userId!, problemId);
   res.json({ submissions });
 });

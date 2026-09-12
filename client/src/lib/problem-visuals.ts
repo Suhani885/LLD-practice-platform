@@ -1,10 +1,13 @@
-import { Blocks, Car, MoveVertical, Package, type LucideIcon } from "lucide-react";
+import { Blocks, BookOpen, Car, MoveVertical, Package, Receipt, Ticket, type LucideIcon } from "lucide-react";
 import type { Difficulty } from "@/lib/api";
 
 const PROBLEM_ICONS: Record<string, LucideIcon> = {
   "parking-lot": Car,
   "elevator-system": MoveVertical,
   "vending-machine": Package,
+  "library-management": BookOpen,
+  "movie-ticket-booking": Ticket,
+  "expense-splitter": Receipt,
 };
 
 export function getProblemIcon(slug: string): LucideIcon {

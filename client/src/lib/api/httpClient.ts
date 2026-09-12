@@ -55,10 +55,10 @@ export class HttpApiClient implements ApiClient {
     return problem;
   }
 
-  async startAttempt(problemId: string): Promise<Attempt> {
+  async startAttempt(problemId: string, fromSubmissionId?: string): Promise<Attempt> {
     const { attempt } = await request<{ attempt: Attempt }>("/attempts", {
       method: "POST",
-      body: JSON.stringify({ problemId }),
+      body: JSON.stringify({ problemId, fromSubmissionId }),
     });
     return attempt;
   }
@@ -89,8 +89,9 @@ export class HttpApiClient implements ApiClient {
     return submission;
   }
 
-  async listSubmissions(): Promise<Submission[]> {
-    const { submissions } = await request<{ submissions: Submission[] }>("/submissions");
+  async listSubmissions(problemId?: string): Promise<Submission[]> {
+    const query = problemId ? `?problemId=${encodeURIComponent(problemId)}` : "";
+    const { submissions } = await request<{ submissions: Submission[] }>(`/submissions${query}`);
     return submissions;
   }
 }

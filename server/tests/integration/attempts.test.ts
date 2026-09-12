@@ -81,6 +81,32 @@ describe("attempts", () => {
     expect(res.body.attempt.designModel.entities).toHaveLength(1);
   });
 
+  it("saves a draft containing a freshly-added entity/field/method that has no name yet", async () => {
+    const agent = await registeredAgent("blank@example.com");
+    const problem = await seedProblem();
+    const { body } = await agent.post("/api/attempts").send({ problemId: problem.id });
+
+    const res = await agent.patch(`/api/attempts/${body.attempt.id}`).send({
+      designModel: {
+        entities: [
+          {
+            kind: "class",
+            name: "",
+            fields: [{ name: "", type: "" }],
+            methods: [{ name: "", signature: "" }],
+            implementsOrExtends: [],
+            responsibility: "",
+          },
+        ],
+        relationships: [],
+      },
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.attempt.designModel.entities).toHaveLength(1);
+    expect(res.body.attempt.designModel.entities[0].name).toBe("");
+  });
+
   it("does not let one user read another user's attempt", async () => {
     const agentA = await registeredAgent("owner@example.com");
     const agentB = await registeredAgent("intruder@example.com");
@@ -98,5 +124,45 @@ describe("attempts", () => {
     const res = await agent.post("/api/attempts").send({ problemId: "000000000000000000000000" });
 
     expect(res.status).toBe(404);
+  });
+
+  it("pre-fills a fresh attempt from a previous submission when fromSubmissionId is given", async () => {
+    const agent = await registeredAgent("retry@example.com");
+    const problem = await seedProblem();
+
+    const first = await agent.post("/api/attempts").send({ problemId: problem.id });
+    const designModel = {
+      entities: [{ kind: "class", name: "VendingMachine", fields: [], methods: [], implementsOrExtends: [], responsibility: "Runs the machine" }],
+      relationships: [],
+    };
+    await agent.patch(`/api/attempts/${first.body.attempt.id}`).send({ designModel, rationale: "First pass." });
+    const submission = await agent.post("/api/submissions").send({ attemptId: first.body.attempt.id });
+
+    const retry = await agent.post("/api/attempts").send({ problemId: problem.id, fromSubmissionId: submission.body.submission.id });
+
+    expect(retry.status).toBe(201);
+    expect(retry.body.attempt.id).not.toBe(first.body.attempt.id);
+    expect(retry.body.attempt.rationale).toBe("First pass.");
+    expect(retry.body.attempt.designModel.entities).toHaveLength(1);
+    expect(retry.body.attempt.designModel.entities[0].name).toBe("VendingMachine");
+  });
+
+  it("ignores a fromSubmissionId that doesn't belong to the requesting user", async () => {
+    const owner = await registeredAgent("srcowner@example.com");
+    const intruder = await registeredAgent("srcintruder@example.com");
+    const problem = await seedProblem();
+
+    const ownerAttempt = await owner.post("/api/attempts").send({ problemId: problem.id });
+    await owner.patch(`/api/attempts/${ownerAttempt.body.attempt.id}`).send({
+      designModel: { entities: [{ kind: "class", name: "X", fields: [], methods: [], implementsOrExtends: [], responsibility: "x" }], relationships: [] },
+    });
+    const ownerSubmission = await owner.post("/api/submissions").send({ attemptId: ownerAttempt.body.attempt.id });
+
+    const res = await intruder
+      .post("/api/attempts")
+      .send({ problemId: problem.id, fromSubmissionId: ownerSubmission.body.submission.id });
+
+    expect(res.status).toBe(201);
+    expect(res.body.attempt.designModel.entities).toHaveLength(0);
   });
 });

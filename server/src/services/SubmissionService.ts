@@ -35,8 +35,10 @@ export class SubmissionService {
     return Submission.findOne({ _id: submissionId, user: userId });
   }
 
-  async listForUser(userId: string): Promise<SubmissionDocument[]> {
-    return Submission.find({ user: userId }).sort({ createdAt: -1 });
+  async listForUser(userId: string, problemId?: string): Promise<SubmissionDocument[]> {
+    const query: Record<string, unknown> = { user: userId };
+    if (problemId) query.problem = problemId;
+    return Submission.find(query).sort({ createdAt: -1 });
   }
 }
 

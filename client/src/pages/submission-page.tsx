@@ -1,10 +1,11 @@
-import { CheckCircle2, Gauge, Loader2, Sparkles, XCircle } from "lucide-react";
+import { CheckCircle2, Gauge, Loader2, Minus, Sparkles, TrendingDown, TrendingUp, XCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PageHeader } from "@/components/layout/page-header";
 import { ScoreGauge } from "@/components/score-gauge";
 import { SubmissionStatusBadge } from "@/components/submission-status-badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,6 +17,7 @@ export function SubmissionPage() {
   const { submissionId = "" } = useParams();
   const [submission, setSubmission] = useState<Submission | null | undefined>(undefined);
   const [problem, setProblem] = useState<Problem | null>(null);
+  const [previousBest, setPreviousBest] = useState<number | null | undefined>(undefined);
   const pollTimer = useRef<ReturnType<typeof setInterval>>(undefined);
 
   useEffect(() => {
@@ -38,6 +40,16 @@ export function SubmissionPage() {
       clearInterval(pollTimer.current);
     };
   }, [submissionId]);
+
+  useEffect(() => {
+    if (!submission || submission.status !== "completed") return;
+    api.listSubmissions(submission.problemId).then((all) => {
+      const otherScores = all
+        .filter((s) => s.id !== submission.id && s.status === "completed" && s.evaluation)
+        .map((s) => s.evaluation!.overallScore);
+      setPreviousBest(otherScores.length ? Math.max(...otherScores) : null);
+    });
+  }, [submission]);
 
   if (submission === undefined) {
     return (
@@ -95,24 +107,55 @@ export function SubmissionPage() {
       {submission.status === "completed" && submission.evaluation && (
         <div className="flex flex-col gap-4">
           <Card className="bg-mesh overflow-hidden">
-            <CardContent className="flex flex-col items-center gap-6 py-8 sm:flex-row sm:justify-center sm:gap-10">
-              <ScoreGauge score={submission.evaluation.overallScore} label="overall" />
-              <div className="flex gap-8">
-                <div className="text-center">
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-muted mx-auto">
-                    <Gauge className="size-4 text-muted-foreground" />
+            <CardContent className="flex flex-col items-center gap-4 py-8">
+              <div className="flex flex-col items-center gap-6 sm:flex-row sm:gap-10">
+                <ScoreGauge score={submission.evaluation.overallScore} label="overall" />
+                <div className="flex gap-8">
+                  <div className="text-center">
+                    <div className="flex size-8 items-center justify-center rounded-lg bg-muted mx-auto">
+                      <Gauge className="size-4 text-muted-foreground" />
+                    </div>
+                    <div className="mt-2 text-xl font-semibold tabular-nums">{submission.evaluation.deterministic.score}</div>
+                    <div className="text-xs text-muted-foreground">Structural</div>
                   </div>
-                  <div className="mt-2 text-xl font-semibold tabular-nums">{submission.evaluation.deterministic.score}</div>
-                  <div className="text-xs text-muted-foreground">Structural</div>
-                </div>
-                <div className="text-center">
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-muted mx-auto">
-                    <Sparkles className="size-4 text-muted-foreground" />
+                  <div className="text-center">
+                    <div className="flex size-8 items-center justify-center rounded-lg bg-muted mx-auto">
+                      <Sparkles className="size-4 text-muted-foreground" />
+                    </div>
+                    <div className="mt-2 text-xl font-semibold tabular-nums">{submission.evaluation.llm?.score ?? "—"}</div>
+                    <div className="text-xs text-muted-foreground">AI feedback</div>
                   </div>
-                  <div className="mt-2 text-xl font-semibold tabular-nums">{submission.evaluation.llm?.score ?? "—"}</div>
-                  <div className="text-xs text-muted-foreground">AI feedback</div>
                 </div>
               </div>
+
+              {previousBest === null && (
+                <Badge variant="secondary" className="gap-1">
+                  First attempt at this problem
+                </Badge>
+              )}
+              {typeof previousBest === "number" &&
+                (() => {
+                  const delta = submission.evaluation!.overallScore - previousBest;
+                  if (delta > 0) {
+                    return (
+                      <Badge className="gap-1 border-transparent bg-success/10 text-success">
+                        <TrendingUp className="size-3.5" /> +{delta} vs your previous best ({previousBest})
+                      </Badge>
+                    );
+                  }
+                  if (delta < 0) {
+                    return (
+                      <Badge variant="secondary" className="gap-1">
+                        <TrendingDown className="size-3.5" /> {delta} vs your previous best ({previousBest})
+                      </Badge>
+                    );
+                  }
+                  return (
+                    <Badge variant="secondary" className="gap-1">
+                      <Minus className="size-3.5" /> Matched your previous best ({previousBest})
+                    </Badge>
+                  );
+                })()}
             </CardContent>
           </Card>
 
@@ -176,8 +219,12 @@ export function SubmissionPage() {
             )}
           </div>
 
-          {problem && (
-            <Button variant="outline" render={<Link to={`/problems/${problem.slug}`} />} className="self-start">
+          {submission.problemId && (
+            <Button
+              variant="outline"
+              render={<Link to={`/problems/${problem?.slug ?? submission.problemId}`} />}
+              className="self-start"
+            >
               Try this problem again
             </Button>
           )}

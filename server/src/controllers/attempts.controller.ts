@@ -4,11 +4,11 @@ import { AppError } from "../utils/AppError";
 import { asyncHandler } from "../utils/asyncHandler";
 
 export const startAttempt = asyncHandler(async (req: Request, res: Response) => {
-  const { problemId } = req.body ?? {};
+  const { problemId, fromSubmissionId } = req.body ?? {};
   if (!problemId) {
     throw new AppError("problemId is required.", 400);
   }
-  const attempt = await attemptService.startOrResume(req.userId!, problemId);
+  const attempt = await attemptService.startOrResume(req.userId!, problemId, fromSubmissionId);
   res.status(201).json({ attempt });
 });
 

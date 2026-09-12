@@ -20,7 +20,7 @@ export function AttemptPage() {
   const [problem, setProblem] = useState<Problem | null>(null);
   const [designModel, setDesignModel] = useState<DesignModel>(emptyDesignModel());
   const [rationale, setRationale] = useState("");
-  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const isFirstLoad = useRef(true);
@@ -46,8 +46,12 @@ export function AttemptPage() {
     setSaveState("saving");
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
-      await api.saveAttemptDraft(attemptId, { designModel, rationale });
-      setSaveState("saved");
+      try {
+        await api.saveAttemptDraft(attemptId, { designModel, rationale });
+        setSaveState("saved");
+      } catch {
+        setSaveState("error");
+      }
     }, 700);
 
     return () => clearTimeout(saveTimer.current);
@@ -113,7 +117,15 @@ export function AttemptPage() {
 
       <PageHeader
         title="Design your solution"
-        description={saveState === "saving" ? "Saving…" : saveState === "saved" ? "Draft saved" : undefined}
+        description={
+          saveState === "saving"
+            ? "Saving…"
+            : saveState === "saved"
+              ? "Draft saved"
+              : saveState === "error"
+                ? "Couldn't save your draft — check your connection"
+                : undefined
+        }
         actions={
           <Button onClick={handleSubmit} disabled={isSubmitting || designModel.entities.length === 0}>
             {isSubmitting && <Loader2 className="size-4 animate-spin" />}

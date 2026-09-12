@@ -72,4 +72,64 @@ export const PROBLEM_SEEDS: ProblemSeed[] = [
     ],
     expectedEntities: ["VendingMachine", "Product", "Inventory", "MachineState", "CoinValidator"],
   },
+  {
+    slug: "library-management",
+    title: "Library Management System",
+    difficulty: "easy",
+    tags: ["OOP fundamentals", "Observer pattern"],
+    summary:
+      "Design a library system that tracks a catalog of books, lets members borrow and return copies, and notifies members when a reserved book becomes available.",
+    requirements: [
+      "Support searching the catalog by title, author, or ISBN.",
+      "A book title can have multiple physical copies; track each copy's availability separately.",
+      "Let a member borrow an available copy and return it, tracking due dates.",
+      "Let a member reserve a title that's fully checked out, and get notified when a copy is returned.",
+      "Support a simple late-fee calculation based on days overdue.",
+    ],
+    constraints: [
+      "A member should not be able to borrow more than a fixed number of books at once.",
+      "The notification mechanism should be swappable (email today, push notification later) without changing reservation logic.",
+    ],
+    expectedEntities: ["Library", "Book", "BookCopy", "Member", "Loan", "ReservationNotifier"],
+  },
+  {
+    slug: "movie-ticket-booking",
+    title: "Movie Ticket Booking System",
+    difficulty: "hard",
+    tags: ["State pattern", "Strategy pattern", "Concurrency-aware design"],
+    summary:
+      "Design a movie ticket booking system where a user picks a show, selects seats, and pays - making sure two people can't book the same seat.",
+    requirements: [
+      "A theater has multiple screens; each screen runs a schedule of shows for different movies.",
+      "A show has a seat map; seats can be available, locked (mid-checkout), or booked.",
+      "Support holding selected seats temporarily while a user checks out, then releasing the hold if payment isn't completed in time.",
+      "Support multiple payment methods (card, wallet) without the booking flow knowing which one was used.",
+      "Support cancelling a booking and releasing its seats.",
+    ],
+    constraints: [
+      "Two users must never be able to successfully book the same seat for the same show - note how your design would prevent this even if not implemented.",
+      "Payment strategy should be swappable without changing booking/seat-locking logic.",
+    ],
+    expectedEntities: ["Theater", "Screen", "Show", "Seat", "Booking", "PaymentStrategy"],
+  },
+  {
+    slug: "expense-splitter",
+    title: "Expense Splitter (Splitwise-style)",
+    difficulty: "medium",
+    tags: ["Strategy pattern", "Graph/balance modeling"],
+    summary:
+      "Design a system where a group of friends log shared expenses and the app tracks who owes whom, supporting equal, percentage, and exact splits.",
+    requirements: [
+      "Support creating a group of users and adding an expense paid by one user, split among a subset of the group.",
+      "Support at least three split strategies: equal, exact amounts, and percentage.",
+      "Track and query the net balance between any two users at any time.",
+      "Support a user settling up (recording a payment) which updates balances.",
+      "Support listing all expenses for a group, most recent first.",
+    ],
+    constraints: [
+      "Split strategy should be swappable per-expense without changing how balances are stored or queried.",
+      "Balances should stay consistent even as new expenses and settlements are added - note how your design keeps this correct.",
+    ],
+    expectedEntities: ["Group", "User", "Expense", "SplitStrategy", "Balance", "Settlement"],
+  },
 ];

@@ -4,23 +4,23 @@ import type { ClassMember, ClassMethod, ClassRelationship, DesignEntity, DesignM
 
 const classMemberSchema = new Schema<ClassMember>(
   {
-    name: { type: String, required: true },
-    type: { type: String, required: true },
+    name: { type: String, default: "" },
+    type: { type: String, default: "" },
   },
   { _id: false },
 );
 
 const classMethodSchema = new Schema<ClassMethod>(
   {
-    name: { type: String, required: true },
-    signature: { type: String, required: true },
+    name: { type: String, default: "" },
+    signature: { type: String, default: "" },
   },
   { _id: false },
 );
 
 const designEntitySchema = new Schema<DesignEntity>({
   kind: { type: String, enum: ["class", "interface", "enum"], required: true },
-  name: { type: String, required: true, trim: true },
+  name: { type: String, default: "", trim: true },
   fields: { type: [classMemberSchema], default: [] },
   methods: { type: [classMethodSchema], default: [] },
   implementsOrExtends: { type: [String], default: [] },
@@ -29,8 +29,8 @@ const designEntitySchema = new Schema<DesignEntity>({
 applyIdTransform(designEntitySchema);
 
 const classRelationshipSchema = new Schema<ClassRelationship>({
-  fromClassName: { type: String, required: true },
-  toClassName: { type: String, required: true },
+  fromClassName: { type: String, default: "" },
+  toClassName: { type: String, default: "" },
   kind: {
     type: String,
     enum: ["association", "aggregation", "composition", "inheritance", "implementation"],

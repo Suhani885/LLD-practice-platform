@@ -184,7 +184,7 @@ export class MockApiClient implements ApiClient {
     );
   }
 
-  async startAttempt(problemId: string): Promise<Attempt> {
+  async startAttempt(problemId: string, fromSubmissionId?: string): Promise<Attempt> {
     await delay(this.latencyMs);
     const problem = PROBLEM_FIXTURES.find((p) => p.id === problemId);
     if (!problem) throw new Error(`Unknown problem: ${problemId}`);
@@ -195,14 +195,24 @@ export class MockApiClient implements ApiClient {
     );
     if (existing) return existing;
 
+    let designModel = emptyDesignModel();
+    let rationale = "";
+    if (fromSubmissionId) {
+      const source = db.submissions.find((s) => s.id === fromSubmissionId && s.problemId === problemId);
+      if (source) {
+        designModel = JSON.parse(JSON.stringify(source.designModel)) as typeof designModel;
+        rationale = source.rationale;
+      }
+    }
+
     const now = new Date().toISOString();
     const attempt: Attempt = {
       id: newId("attempt"),
       problemId,
       userId: DEMO_USER.id,
       status: "in_progress",
-      designModel: emptyDesignModel(),
-      rationale: "",
+      designModel,
+      rationale,
       createdAt: now,
       updatedAt: now,
     };
@@ -264,11 +274,11 @@ export class MockApiClient implements ApiClient {
     return db.submissions.find((s) => s.id === submissionId) ?? null;
   }
 
-  async listSubmissions(): Promise<Submission[]> {
+  async listSubmissions(problemId?: string): Promise<Submission[]> {
     await delay(this.latencyMs);
     const db = loadDb();
     return db.submissions
-      .filter((s) => s.userId === DEMO_USER.id)
+      .filter((s) => s.userId === DEMO_USER.id && (!problemId || s.problemId === problemId))
       .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   }
 

@@ -114,6 +114,33 @@ describe("submissions", () => {
     expect(historyB.body.submissions).toHaveLength(0);
   });
 
+  it("filters history to a single problem when problemId is given", async () => {
+    const agent = await registeredAgent("filter@example.com");
+    const problemA = await seedProblem();
+    const problemB = await Problem.create({
+      slug: "library-management",
+      title: "Library Management System",
+      difficulty: "easy",
+      summary: "Design a library system.",
+      requirements: [],
+      constraints: [],
+      expectedEntities: ["Library"],
+    });
+
+    for (const problem of [problemA, problemB]) {
+      const { body: attemptRes } = await agent.post("/api/attempts").send({ problemId: problem.id });
+      await agent.patch(`/api/attempts/${attemptRes.attempt.id}`).send({
+        designModel: { entities: [{ kind: "class", name: "X", fields: [], methods: [], implementsOrExtends: [], responsibility: "x" }], relationships: [] },
+      });
+      await agent.post("/api/submissions").send({ attemptId: attemptRes.attempt.id });
+    }
+
+    const filtered = await agent.get(`/api/submissions?problemId=${problemA.id}`);
+
+    expect(filtered.body.submissions).toHaveLength(1);
+    expect(filtered.body.submissions[0].problemId).toBe(problemA.id);
+  });
+
   it("does not let one user read another user's submission", async () => {
     const agentA = await registeredAgent("ownerSub@example.com");
     const agentB = await registeredAgent("intruderSub@example.com");

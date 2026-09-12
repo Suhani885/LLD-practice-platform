@@ -1,5 +1,6 @@
 import { Attempt, type AttemptDocument } from "../models/Attempt";
 import { Problem } from "../models/Problem";
+import { Submission } from "../models/Submission";
 import type { DesignModel } from "../domain/types";
 import { AppError } from "../utils/AppError";
 
@@ -9,7 +10,7 @@ export interface AttemptDraftPatch {
 }
 
 export class AttemptService {
-  async startOrResume(userId: string, problemId: string): Promise<AttemptDocument> {
+  async startOrResume(userId: string, problemId: string, fromSubmissionId?: string): Promise<AttemptDocument> {
     const problem = await Problem.findById(problemId);
     if (!problem) {
       throw new AppError("Problem not found.", 404);
@@ -17,6 +18,18 @@ export class AttemptService {
 
     const existing = await Attempt.findOne({ user: userId, problem: problemId, status: "in_progress" });
     if (existing) return existing;
+
+    if (fromSubmissionId) {
+      const source = await Submission.findOne({ _id: fromSubmissionId, user: userId, problem: problemId });
+      if (source) {
+        return Attempt.create({
+          user: userId,
+          problem: problemId,
+          designModel: JSON.parse(JSON.stringify(source.designModel)) as DesignModel,
+          rationale: source.rationale,
+        });
+      }
+    }
 
     return Attempt.create({ user: userId, problem: problemId });
   }

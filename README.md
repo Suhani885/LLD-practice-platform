@@ -8,15 +8,13 @@ left it off, or see how much your score improved on a retry — so practice comp
 
 **Practice loop:** Choose problem → Design → Submit → Get feedback → Review → Try again
 
-**Docs:** [Research note](RESEARCH.md) · [Design note](DESIGN.md) · [AI usage](AI_USAGE.md)
-
 ## Stack
 
 | Layer | Choice |
 |---|---|
 | Frontend | React 19 + Vite + TypeScript + Tailwind CSS v4 + shadcn/ui (Base UI) |
 | Backend | Node.js + Express + TypeScript |
-| Database | MongoDB (Atlas free tier), via Mongoose |
+| Database | MongoDB, via Mongoose |
 | Auth | JWT in an httpOnly cookie, bcrypt password hashing |
 | AI feedback | Groq API behind a `FeedbackProvider` interface, falls back to a deterministic mock provider when no API key is set |
 | Async evaluation | In-process job queue (`pending → evaluating → completed/failed`), no external broker |
@@ -39,14 +37,6 @@ left it off, or see how much your score improved on a retry — so practice comp
   from a previous submission) once you've attempted it before, and the feedback page shows your score delta
   against your previous best — see `DESIGN.md`'s "Review and iterate" section for the full rationale.
 
-## Project structure
-
-```
-lld-practice/
-├── client/     # React + Vite + TypeScript frontend
-├── server/     # Express + TypeScript API
-└── README.md
-```
 
 ## Getting started
 

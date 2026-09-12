@@ -46,7 +46,7 @@ export function ProblemsPage() {
 
   return (
     <>
-      <div className="bg-mesh -mx-4 mb-8 rounded-2xl border px-6 py-8 sm:-mx-6 sm:px-10 lg:-mx-8">
+      <div className="sticky top-16 z-10 -mx-4 mb-8 bg-background px-6 py-6 sm:-mx-6 sm:px-10 lg:top-0 lg:-mx-8">
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Problems</h1>
         <p className="mt-1.5 max-w-xl text-sm text-muted-foreground sm:text-base">
           Pick a problem, model it, and get feedback that combines structural checks with AI reasoning.

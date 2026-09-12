@@ -5,6 +5,7 @@ import { AuthLayout } from "@/components/layout/auth-layout";
 import { PageLoading } from "@/components/page-loading";
 import { ProtectedRoute } from "@/components/protected-route";
 
+const DashboardPage = lazy(() => import("@/pages/dashboard-page").then((m) => ({ default: m.DashboardPage })));
 const ProblemsPage = lazy(() => import("@/pages/problems-page").then((m) => ({ default: m.ProblemsPage })));
 const ProblemDetailPage = lazy(() => import("@/pages/problem-detail-page").then((m) => ({ default: m.ProblemDetailPage })));
 const AttemptPage = lazy(() => import("@/pages/attempt-page").then((m) => ({ default: m.AttemptPage })));
@@ -18,7 +19,7 @@ function App() {
   return (
     <Suspense fallback={<PageLoading />}>
       <Routes>
-        <Route path="/" element={<Navigate to="/problems" replace />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
@@ -27,6 +28,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppShell />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/problems" element={<ProblemsPage />} />
             <Route path="/problems/:problemSlug" element={<ProblemDetailPage />} />
             <Route path="/attempts/:attemptId" element={<AttemptPage />} />

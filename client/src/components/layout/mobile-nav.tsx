@@ -64,7 +64,6 @@ export function MobileNav() {
           ))}
         </nav>
 
-        {/* User info + Logout */}
         {user && (
           <div className="mt-auto border-t px-3 py-3">
             <div className="flex items-center gap-3 rounded-md px-2 py-2">

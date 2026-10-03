@@ -1,7 +1,8 @@
-import { Loader2, Lock, Mail, Sparkles, User } from "lucide-react";
+import { Loader2, Mail, Sparkles, User } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { PasswordInput } from "@/components/password-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,7 +52,6 @@ export function RegisterPage() {
   return (
     <div className="glass-card rounded-2xl p-1">
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 p-6 sm:p-8">
-        {/* Header */}
         <div className="flex flex-col items-center gap-3 text-center">
           <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10">
             <Sparkles className="size-6 text-primary" />
@@ -64,7 +64,6 @@ export function RegisterPage() {
           </div>
         </div>
 
-        {/* Form fields */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="name" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -107,21 +106,15 @@ export function RegisterPage() {
             <Label htmlFor="password" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Password
             </Label>
-            <div className="auth-input-glow relative rounded-lg">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/50" />
-              <Input
-                id="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="pl-10 transition-shadow"
-              />
-            </div>
-            {/* Password strength indicator */}
+            <PasswordInput
+              id="password"
+              autoComplete="new-password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
             {password.length > 0 && (
               <div className="flex items-center gap-2 pt-1">
                 <div className="flex flex-1 gap-1">
@@ -140,7 +133,6 @@ export function RegisterPage() {
           </div>
         </div>
 
-        {/* Error */}
         {error && (
           <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3">
             <p role="alert" className="text-sm text-destructive">
@@ -149,7 +141,6 @@ export function RegisterPage() {
           </div>
         )}
 
-        {/* Submit */}
         <div className="flex flex-col gap-4">
           <Button type="submit" className="h-11 w-full font-medium" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="size-4 animate-spin" />}

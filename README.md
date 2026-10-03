@@ -33,10 +33,6 @@ left it off, or see how much your score improved on a retry — so practice comp
     submission it belongs to.
   - `jobs/EvaluationQueue.ts` — the in-process async runner that drives a submission through the pipeline.
   - `services/`, `controllers/`, `routes/` — thin layers wiring HTTP to the domain/data layer.
-- **Review and iterate:** a problem's detail page offers "Continue from last attempt" (pre-fills a new attempt
-  from a previous submission) once you've attempted it before, and the feedback page shows your score delta
-  against your previous best — see `DESIGN.md`'s "Review and iterate" section for the full rationale.
-
 
 ## Getting started
 

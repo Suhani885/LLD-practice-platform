@@ -122,20 +122,16 @@ export function DashboardPage() {
     bestByProblem.set(s.problemId, Math.max(bestByProblem.get(s.problemId) ?? 0, score));
   }
 
-  // Featured problems: pick a mix of difficulties, limit to 3
   const featured = problems.slice(0, 3);
 
-  // Recent activity: last 3 submissions
   const recent = submissions.slice(0, 5);
 
   const firstName = user?.name.split(" ")[0] ?? "there";
 
-  // Count unique problems attempted
   const uniqueProblemsAttempted = new Set(submissions.map((s) => s.problemId)).size;
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Welcome hero */}
       <div className="animate-fade-in-up sticky top-16 z-10 -mx-4 bg-background px-6 py-6 sm:-mx-6 sm:px-10 lg:top-0 lg:-mx-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -155,7 +151,6 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats strip */}
       <div className="animate-fade-in-up-delay-1 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard icon={BookOpen} value={problems.length} label="Total Problems" accent="bg-primary/10 text-primary" />
         <StatCard icon={Target} value={uniqueProblemsAttempted} label="Attempted" accent="bg-info/10 text-info" />
@@ -163,7 +158,6 @@ export function DashboardPage() {
         <StatCard icon={Trophy} value={avgScore ?? "–"} label="Avg. Score" accent="bg-success/10 text-success" />
       </div>
 
-      {/* Featured problems */}
       <section className="animate-fade-in-up-delay-2">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -188,7 +182,6 @@ export function DashboardPage() {
         </div>
       </section>
 
-      {/* Recent activity */}
       {recent.length > 0 && (
         <section className="animate-fade-in-up-delay-3">
           <div className="mb-4 flex items-center justify-between">

@@ -52,7 +52,6 @@ export function AppSidebar() {
         ))}
       </nav>
 
-      {/* User info + Logout */}
       {user && (
         <div className="border-t border-sidebar-border px-3 py-3">
           <div className="flex items-center gap-3 rounded-md px-2 py-2">

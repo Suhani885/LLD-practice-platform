@@ -1,7 +1,8 @@
-import { Blocks, Loader2, Lock, Mail } from "lucide-react";
+import { Blocks, Loader2, Mail } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { PasswordInput } from "@/components/password-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,7 +37,6 @@ export function LoginPage() {
   return (
     <div className="glass-card rounded-2xl p-1">
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 p-6 sm:p-8">
-        {/* Header */}
         <div className="flex flex-col items-center gap-3 text-center">
           <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10">
             <Blocks className="size-6 text-primary" />
@@ -49,7 +49,6 @@ export function LoginPage() {
           </div>
         </div>
 
-        {/* Form fields */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="email" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -74,23 +73,17 @@ export function LoginPage() {
             <Label htmlFor="password" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Password
             </Label>
-            <div className="auth-input-glow relative rounded-lg">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/50" />
-              <Input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="pl-10 transition-shadow"
-              />
-            </div>
+            <PasswordInput
+              id="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+            />
           </div>
         </div>
 
-        {/* Error */}
         {error && (
           <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3">
             <p role="alert" className="text-sm text-destructive">
@@ -99,7 +92,6 @@ export function LoginPage() {
           </div>
         )}
 
-        {/* Submit */}
         <div className="flex flex-col gap-4">
           <Button type="submit" className="h-11 w-full font-medium" disabled={isSubmitting}>
             {isSubmitting && <Loader2 className="size-4 animate-spin" />}

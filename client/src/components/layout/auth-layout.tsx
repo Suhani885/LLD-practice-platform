@@ -18,20 +18,16 @@ const FLOATING_ICONS = [
 export function AuthLayout() {
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
-      {/* Left panel — enhanced */}
       <div className="auth-gradient-bg relative hidden flex-col justify-between overflow-hidden border-r p-10 lg:flex">
-        {/* Floating icons */}
         {FLOATING_ICONS.map(({ icon: Icon, className, size }, i) => (
           <div key={i} className={className}>
             <Icon className={`${size} text-primary`} />
           </div>
         ))}
 
-        {/* Decorative gradient orbs */}
         <div className="absolute -top-20 -right-20 size-64 rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute -bottom-20 -left-20 size-64 rounded-full bg-info/5 blur-3xl" />
 
-        {/* Logo */}
         <div className="relative flex items-center gap-2.5">
           <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
             <Blocks className="size-5" />
@@ -39,7 +35,6 @@ export function AuthLayout() {
           <span className="text-lg font-semibold tracking-tight">LLD Practice</span>
         </div>
 
-        {/* Main copy */}
         <div className="relative max-w-md">
           <h1 className="text-3xl font-bold tracking-tight text-balance leading-tight sm:text-4xl">
             Practice Low-Level Design like it's a habit, not a one-off.
@@ -49,7 +44,6 @@ export function AuthLayout() {
             up and where it doesn't.
           </p>
 
-          {/* Step indicators */}
           <div className="mt-8 flex flex-col gap-4">
             {STEPS.map((step) => (
               <div key={step.text} className="group flex items-start gap-4">
@@ -65,13 +59,11 @@ export function AuthLayout() {
           </div>
         </div>
 
-        {/* Footer */}
         <p className="relative text-xs text-muted-foreground/70">
           Built with a real evaluation pipeline — deterministic checks + AI feedback.
         </p>
       </div>
 
-      {/* Right panel — form */}
       <div className="flex flex-col">
         <header className="flex h-16 items-center justify-between px-6 lg:justify-end">
           <div className="flex items-center gap-2 lg:hidden">
